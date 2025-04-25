@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ViT ITPruner",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract.py",
+            "args": [
+                "--model", "vit",
+                "--path", "/home/sogang/mnt/db_2/oh/ITPruner/vit_base_patch16_224.pth",
+                "--dataset", "imagenet",
+                "--save_path", "/pruned_model",
+                "--target_flops", "150000000",
+                "--beta", "243",
+            ],
+            "cwd": "/home/sogang/mnt/db_2/oh/ITPruner",
+            "console": "integratedTerminal"
+        }
+    ]
+}
