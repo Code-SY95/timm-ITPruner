@@ -5,18 +5,60 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ViT ITPruner",
+            "name": "ITPruner Feature Extract",
             "type": "debugpy",
             "request": "launch",
-            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract.py",
+            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract copy.py",
             "args": [
-                "--model", "vit",
+                "--model", "vit_base_patch16_224",
                 "--path", "/home/sogang/mnt/db_2/oh/ITPruner/vit_base_patch16_224.pth",
+                "--dataset_path", "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/data/tiny-imagenet-200/train",
                 "--dataset", "imagenet",
                 "--save_path", "/pruned_model",
                 "--target_flops", "150000000",
                 "--beta", "243",
             ],
+            "cwd": "/home/sogang/mnt/db_2/oh/ITPruner",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "ITPruner timm Feature Extract",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract2.py",
+            "args": [
+                "--model", "vit_base_patch16_224.dino",
+                "--dataset_path", "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/data/tiny-imagenet-200/train",
+                "--save_path", "/pruned_model",
+                "--target_flops", "150000000",
+                "--beta", "243",
+            ],
+            "cwd": "/home/sogang/mnt/db_2/oh/ITPruner",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "(test) ITPruner timm Feature Extract",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract.py",
+            "args": [
+                "--model", "vit_base_patch16_224.dino",
+                "--dataset", "imagenet",
+                "--data_path", "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/data/tiny-imagenet-200/train",
+                // "--batch_size", "8",
+                // "--num_workers", "4",
+                // "--save_path", "/home/sogang/mnt/db_2/oh/ITPruner/pruned_model",
+                // "--target_flops", "150000000",
+                // "--beta", "243",
+            ],
+            "cwd": "/home/sogang/mnt/db_2/oh/ITPruner",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Just Test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/sogang/mnt/db_2/oh/ITPruner/test.py",
             "cwd": "/home/sogang/mnt/db_2/oh/ITPruner",
             "console": "integratedTerminal"
         }
