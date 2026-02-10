@@ -10,11 +10,11 @@
             "request": "launch",
             "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract copy.py",
             "args": [
-                "--model", "vit_base_patch16_224",
-                "--path", "/home/sogang/mnt/db_2/oh/ITPruner/vit_base_patch16_224.pth",
-                "--dataset_path", "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/data/tiny-imagenet-200/train",
+                "--model", "resnet50",
+                "--path", "/home/sogang/mnt/db_2/oh/ITPruner/resnet18.safetensors",
+                // "--dataset_path", "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/data/tiny-imagenet-200/train",
                 "--dataset", "imagenet",
-                "--save_path", "/pruned_model",
+                "--save_path", "Imagenet/data/tiny-imagenet-200", // data가 저장된 경로로
                 "--target_flops", "150000000",
                 "--beta", "243",
             ],
@@ -25,9 +25,10 @@
             "name": "ITPruner timm Feature Extract",
             "type": "debugpy",
             "request": "launch",
-            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract2.py",
+            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/feature_extract.py",
             "args": [
                 "--model", "vit_base_patch16_224.dino",
+                // "--target_layers", "",
                 "--dataset_path", "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/data/tiny-imagenet-200/train",
                 "--save_path", "/pruned_model",
                 "--target_flops", "150000000",
@@ -59,6 +60,14 @@
             "type": "debugpy",
             "request": "launch",
             "program": "/home/sogang/mnt/db_2/oh/ITPruner/test.py",
+            "cwd": "/home/sogang/mnt/db_2/oh/ITPruner",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Wrapper Test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/sogang/mnt/db_2/oh/ITPruner/Imagenet/test_wrapper.py",
             "cwd": "/home/sogang/mnt/db_2/oh/ITPruner",
             "console": "integratedTerminal"
         }

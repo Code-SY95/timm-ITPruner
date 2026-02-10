@@ -66,30 +66,6 @@ transform = create_transform(**config)
 dataset = datasets.ImageFolder(root=args.dataset_path, transform=transform)
 dataloader = DataLoader(dataset, batch_size=args.test_batch_size, shuffle=False, num_workers=args.n_worker)
 
-# -------------------------------
-# Feature Extraction with Hook
-# -------------------------------
-
-# feature_outputs = OrderedDict()
-
-# def hook_fn(module, input, output):
-#     feature_outputs[module_name] = output
-
-# # Hook 등록
-# hooks = []
-
-# if args.target_layers is None:
-#     # 전체 레이어 대상
-#     for name, module in model.named_modules():
-#         if isinstance(module, (nn.Conv2d, nn.Linear)):  # 예시: Conv나 Linear만 hook
-#             module_name = name
-#             hooks.append(module.register_forward_hook(lambda m, i, o: feature_outputs.setdefault(module_name, o)))
-# else:
-#     # 특정 레이어만 대상으로
-#     for name, module in model.named_modules():
-#         if name in args.target_layers:
-#             module_name = name
-#             hooks.append(module.register_forward_hook(lambda m, i, o: feature_outputs.setdefault(module_name, o)))
 
 def register_hooks(model, target_layers=None):
     """
@@ -103,10 +79,34 @@ def register_hooks(model, target_layers=None):
     """
     feature_outputs = OrderedDict()
     hooks = []
+    
+    temp_model = timm.create_model(args.model, pretrained=True)
+    
+    # -------------------------------
+    # ViT 모델의 FFN layer 자동 선택 (target_layers 미지정 시)
+    # -------------------------------
+    if args.target_layers is None:
+        transformer_like = False
+        target_layers = []
 
-    def hook_fn(module, input, output):
-        # output을 feature_outputs에 저장
-        feature_outputs[module_name] = output
+        for name, module in temp_model.named_modules():
+            # Transformer 계열: 보통 'blocks.N.mlp' 또는 'blocks.N.ffn' 구조를 가짐
+            if any(x in name for x in ['blocks', 'mlp', 'ffn']):
+                if isinstance(module, nn.Sequential) or hasattr(module, 'fc1'):  # timm ViT 기준 fc1이 있으면 FFN
+                    if name.endswith('mlp') or name.endswith('ffn'):
+                        target_layers.append(name)
+                        transformer_like = True
+
+        if transformer_like and target_layers:
+            args.target_layers = target_layers
+            print(f"[Auto target_layers for Transformer-FFN]: {args.target_layers}")
+        else:
+            # Transformer 계열이 아니거나 FFN 구조를 못 찾았을 경우: 일반 FFN (nn.Linear) 대상으로 자동 선택
+            args.target_layers = [
+                name for name, module in temp_model.named_modules()
+                if isinstance(module, nn.Linear)
+            ]
+            print(f"[Auto target_layers for general FFN (Linear)]: {args.target_layers}")
 
     for name, module in model.named_modules():
         if target_layers is None:

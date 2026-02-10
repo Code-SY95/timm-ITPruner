@@ -14,7 +14,7 @@ from torchprofile import profile_macs
 import sys
 
 import apex
-from apex.parallel import DistributedDataParallel as DDP
+# from apex.parallel import DistributedDataParallel as DDP
 from utils import count_parameters, AverageMeter, get_unpruned_weights, accuracy, cross_entropy_with_label_smoothing
 # from apex import amp, optimizers
 
@@ -157,6 +157,10 @@ class RunManager:
         self.net.init_model(run_config.model_init, run_config.init_div_groups)
 
         # net info
+        # CUDA Error를 방직하기 위해 GPU 인덱스를 0으로 고정하는 코드를 추가
+        gpu = 0  # 명시적으로 0번 GPU 지정
+        torch.cuda.set_device(gpu)
+        
         self.net = self.net.cuda()
         if run_config.local_rank == 0:
             self.print_net_info()

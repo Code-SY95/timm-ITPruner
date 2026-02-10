@@ -10,7 +10,7 @@ from CKA import cka
 import torch
 import torch.nn as nn
 from run_manager import RunManager
-from models import ResNet_ImageNet, MobileNet, MobileNetV2, TrainRunConfig, Vit_Imagenet
+from models import ResNet_ImageNet, MobileNet, MobileNetV2, TrainRunConfig
 
 parser = argparse.ArgumentParser()
 
@@ -44,10 +44,10 @@ if __name__ == '__main__':
     torch.manual_seed(args.manual_seed)
     torch.cuda.manual_seed_all(args.manual_seed)
     np.random.seed(args.manual_seed)
-    # distributed setting
-    torch.distributed.init_process_group(backend='nccl',
-                                         init_method='env://')
-    args.world_size = torch.distributed.get_world_size()
+    # distributed setting - Test 과정에서는 필요 없으니 주석처리
+    # torch.distributed.init_process_group(backend='nccl',
+    #                                      init_method='env://')
+    # args.world_size = torch.distributed.get_world_size()
 
     # prepare run config
     run_config_path = '%s/run.config' % args.path
@@ -183,5 +183,3 @@ if __name__ == '__main__':
     print(optimize_cfg)
     print(net.cfg2flops(prun_cfg))
     print(net.cfg2flops(net.cfg))
-
-
